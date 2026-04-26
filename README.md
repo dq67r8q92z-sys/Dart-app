@@ -1,14 +1,15 @@
-# Dart Score Pro V2
+# Dart Score Pro V3 Multiplayer
 
-## Neue Funktionen
-- besseres iPhone-Design
-- Tabs: Spiel / Stats / Verlauf
-- Match-Historie
-- Best of 3 / 5 / 7
-- Double-Out oder Straight-Out
-- 100+, 140+, 180er Zähler
-- Highscore
+## Funktionen
+- Online-Spiel erstellen
+- Raum-Code teilen
+- Spiel beitreten
+- Live-Sync über Supabase
+- 301 / 501 / 701
+- Best of 1 / 3 / 5
+- Leg-Zähler
 - 3-Dart Average
+- Highscore
+- 100+, 140+, 180er Tracking
 - Checkout-Hilfe
 - Undo
-- aktive Spiele werden lokal gespeichert

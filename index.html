@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
   <meta name="theme-color" content="#070b10" />
   <link rel="manifest" href="/manifest.json">
-  <title>Dart Score Pro V2</title>
+  <title>Dart Score Pro Multiplayer</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root{
+    :root {
       --bg:#070b10;--card:#111827;--card2:#1f2937;--card3:#0f172a;
       --text:#f9fafb;--muted:#9ca3af;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;
       --blue:#38bdf8;--border:#334155;
@@ -15,10 +16,8 @@
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{margin:0;background:radial-gradient(circle at top,#172033,#070b10 55%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:16px;padding-bottom:34px}
     h1{font-size:30px;margin:0 0 4px;font-weight:950;letter-spacing:-.05em}
-    h2{font-size:19px;margin:0 0 12px}.sub{color:var(--muted);font-size:13px;margin-bottom:14px}
-    .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-    .tabs button{background:#0f172a;color:var(--text);border:1px solid var(--border);padding:11px;border-radius:15px;font-size:14px}
-    .tabs button.on{background:var(--green);color:#04130a;border:0}
+    h2{font-size:19px;margin:0 0 12px}
+    .sub{color:var(--muted);font-size:13px;margin-bottom:14px}
     .card{background:rgba(17,24,39,.94);border:1px solid var(--border);border-radius:22px;padding:15px;margin-bottom:13px;box-shadow:0 12px 36px rgba(0,0,0,.24)}
     .row{display:flex;gap:9px}.row>*{flex:1}
     input,select,button{width:100%;border-radius:15px;border:1px solid var(--border);padding:13px;font-size:16px;background:var(--card2);color:var(--text)}
@@ -30,116 +29,257 @@
     .player{background:#0f172a;border:1px solid var(--border);border-radius:22px;padding:15px}
     .active{border-color:var(--green);box-shadow:0 0 0 2px rgba(34,197,94,.18)}
     .playerTop{display:flex;justify-content:space-between;align-items:start;gap:10px}
-    .name{font-size:14px;color:var(--muted);font-weight:700}.score{font-size:56px;font-weight:950;line-height:.95}
+    .name{font-size:14px;color:var(--muted);font-weight:700}
+    .score{font-size:56px;font-weight:950;line-height:.95}
     .badge{font-size:12px;border:1px solid var(--border);background:#020617;border-radius:999px;padding:5px 9px;color:var(--muted)}
     .meta{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:10px}
     .meta span{background:#020617;border:1px solid #1e293b;border-radius:999px;padding:5px 8px}
     .checkout{margin-top:12px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35);border-radius:14px;padding:10px;color:#bbf7d0;font-weight:850}
     .display{height:68px;display:flex;align-items:center;justify-content:center;background:#020617;border:1px solid var(--border);border-radius:18px;font-size:38px;font-weight:950;margin-bottom:10px}
-    .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px}.quick button{background:#172033;color:var(--text);padding:11px;font-size:15px}
-    .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pad button{background:var(--card2);color:var(--text);font-size:24px;padding:16px}
-    .historyItem{border:1px solid var(--border);background:#0f172a;border-radius:16px;padding:12px;margin-bottom:9px}
-    .historyItem b{display:block;margin-bottom:4px}.small{font-size:12px;color:var(--muted);line-height:1.4}.list{display:grid;gap:8px}
+    .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px}
+    .quick button{background:#172033;color:var(--text);padding:11px;font-size:15px}
+    .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .pad button{background:var(--card2);color:var(--text);font-size:24px;padding:16px}
     .turn{display:flex;justify-content:space-between;border-bottom:1px solid #1e293b;padding:8px 0;font-size:14px;color:var(--muted)}
-    .turn:last-child{border-bottom:0}.winner{color:#bbf7d0;font-weight:900}
+    .turn:last-child{border-bottom:0}
+    .codeBox{font-size:28px;font-weight:950;letter-spacing:.08em;background:#020617;border:1px dashed var(--blue);border-radius:18px;padding:14px;text-align:center;color:#bae6fd}
+    .small{font-size:12px;color:var(--muted);line-height:1.4}
+    .ok{color:#bbf7d0;font-weight:800}
+    .err{color:#fecaca;font-weight:800}
   </style>
 </head>
 <body>
   <h1>🎯 Dart Score Pro</h1>
-  <div class="sub">V2 · iPhone Web-App · X01 Scoring</div>
+  <div class="sub">V3 · Online Multiplayer · Raum-Code</div>
 
-  <nav class="tabs">
-    <button id="tabGame" class="on" onclick="showTab('gameTab')">Spiel</button>
-    <button id="tabStats" onclick="showTab('statsTab')">Stats</button>
-    <button id="tabHistory" onclick="showTab('historyTab')">Verlauf</button>
-  </nav>
-
-  <section id="setup" class="card">
-    <h2>Neues Spiel</h2>
-    <div class="row">
-      <select id="startScore"><option>501</option><option>301</option><option>701</option></select>
-      <select id="bestOf"><option value="1">1 Leg</option><option value="3">Best of 3</option><option value="5">Best of 5</option><option value="7">Best of 7</option></select>
-    </div>
-    <div class="row" style="margin-top:9px">
-      <select id="playerCount"><option>1</option><option selected>2</option><option>3</option><option>4</option></select>
-      <select id="doubleOut"><option value="1" selected>Double Out</option><option value="0">Straight Out</option></select>
-    </div>
-    <div id="names"></div>
-    <button style="margin-top:10px" onclick="startGame()">Spiel starten</button>
-    <p class="small">V2 speichert Match, Verlauf und aktive Spiele lokal auf deinem iPhone.</p>
+  <section id="menu" class="card">
+    <h2>Online Spiel</h2>
+    <button onclick="showCreate()">Spiel erstellen</button>
+    <button class="secondary" style="margin-top:9px" onclick="showJoin()">Spiel beitreten</button>
+    <p class="small">Erstelle einen Raum-Code und teile ihn mit deinem Freund. Beide sehen denselben Score live.</p>
   </section>
 
-  <main id="gameTab">
-    <section id="game" class="hidden">
-      <div id="players" class="players"></div>
+  <section id="createBox" class="card hidden">
+    <h2>Spiel erstellen</h2>
+    <div class="row">
+      <select id="startScore"><option>501</option><option>301</option><option>701</option></select>
+      <select id="bestOf"><option value="1">1 Leg</option><option value="3">Best of 3</option><option value="5">Best of 5</option></select>
+    </div>
+    <input id="hostName" placeholder="Dein Name" style="margin-top:9px" value="Spieler 1">
+    <input id="guestName" placeholder="Gegner Name" style="margin-top:9px" value="Spieler 2">
+    <button style="margin-top:10px" onclick="createGame()">Raum erstellen</button>
+    <button class="secondary" style="margin-top:8px" onclick="backMenu()">Zurück</button>
+  </section>
 
-      <section class="card">
-        <h2 id="turnTitle">Eingabe</h2>
-        <div id="display" class="display">0</div>
-        <div class="quick">
-          <button onclick="setInput(26)">26</button><button onclick="setInput(45)">45</button><button onclick="setInput(60)">60</button><button onclick="setInput(81)">81</button>
-          <button onclick="setInput(100)">100</button><button onclick="setInput(121)">121</button><button onclick="setInput(140)">140</button><button onclick="setInput(180)">180</button>
-        </div>
-        <div class="pad">
-          <button onclick="num('1')">1</button><button onclick="num('2')">2</button><button onclick="num('3')">3</button>
-          <button onclick="num('4')">4</button><button onclick="num('5')">5</button><button onclick="num('6')">6</button>
-          <button onclick="num('7')">7</button><button onclick="num('8')">8</button><button onclick="num('9')">9</button>
-          <button class="warn" onclick="clearInput()">C</button><button onclick="num('0')">0</button><button class="danger" onclick="undo()">↶</button>
-        </div>
-        <button style="margin-top:10px" onclick="submitScore()">Score buchen</button>
-        <div class="row" style="margin-top:8px">
-          <button class="secondary" onclick="finishMatch(false)">Match beenden</button>
-          <button class="danger" onclick="resetAll()">Reset</button>
-        </div>
-      </section>
+  <section id="joinBox" class="card hidden">
+    <h2>Spiel beitreten</h2>
+    <input id="joinCode" placeholder="Raum-Code eingeben">
+    <button style="margin-top:10px" onclick="joinGame()">Beitreten</button>
+    <button class="secondary" style="margin-top:8px" onclick="backMenu()">Zurück</button>
+  </section>
 
-      <section class="card">
-        <h2>Letzte Würfe</h2>
-        <div id="turnList" class="list small">Noch keine Würfe.</div>
-      </section>
-    </section>
-  </main>
-
-  <main id="statsTab" class="hidden">
+  <main id="game" class="hidden">
     <section class="card">
-      <h2>Aktuelle Match-Stats</h2>
-      <div id="statsBox" class="small">Noch kein aktives Spiel.</div>
+      <div class="small">Raum-Code</div>
+      <div id="codeDisplay" class="codeBox">-----</div>
+      <button class="secondary" style="margin-top:9px" onclick="copyCode()">Code kopieren</button>
+      <div id="syncStatus" class="small" style="margin-top:8px">Verbinde...</div>
     </section>
-  </main>
 
-  <main id="historyTab" class="hidden">
+    <div id="players" class="players"></div>
+
     <section class="card">
-      <h2>Match-Verlauf</h2>
-      <div id="historyBox" class="small">Noch keine gespeicherten Matches.</div>
-      <button class="danger" style="margin-top:10px" onclick="clearHistory()">Verlauf löschen</button>
+      <h2 id="turnTitle">Score eingeben</h2>
+      <div id="display" class="display">0</div>
+      <div class="quick">
+        <button onclick="setInput(26)">26</button><button onclick="setInput(45)">45</button><button onclick="setInput(60)">60</button><button onclick="setInput(81)">81</button>
+        <button onclick="setInput(100)">100</button><button onclick="setInput(121)">121</button><button onclick="setInput(140)">140</button><button onclick="setInput(180)">180</button>
+      </div>
+      <div class="pad">
+        <button onclick="num('1')">1</button><button onclick="num('2')">2</button><button onclick="num('3')">3</button>
+        <button onclick="num('4')">4</button><button onclick="num('5')">5</button><button onclick="num('6')">6</button>
+        <button onclick="num('7')">7</button><button onclick="num('8')">8</button><button onclick="num('9')">9</button>
+        <button class="warn" onclick="clearInput()">C</button><button onclick="num('0')">0</button><button class="danger" onclick="undoTurn()">↶</button>
+      </div>
+      <button style="margin-top:10px" onclick="submitScore()">Score buchen</button>
+      <button class="danger" style="margin-top:8px" onclick="leaveGame()">Spiel verlassen</button>
+    </section>
+
+    <section class="card">
+      <h2>Letzte Würfe</h2>
+      <div id="turnList" class="small">Noch keine Würfe.</div>
     </section>
   </main>
 
 <script>
-let players=[],current=0,input="",history=[],start=501,bestOf=1,doubleOut=true,turns=[],matchStart=null;
+const SUPABASE_URL = "https://enhswbayupniwielxxqc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_XHyt9DuEBIp97Z0YwsoauA_ua--ZoDY";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let roomCode = null;
+let currentGameId = null;
+let currentState = null;
+let input = "";
+let channel = null;
+
 const checkouts={170:"T20 T20 Bull",167:"T20 T19 Bull",164:"T20 T18 Bull",161:"T20 T17 Bull",160:"T20 T20 D20",158:"T20 T20 D19",157:"T20 T19 D20",156:"T20 T20 D18",155:"T20 T19 D19",154:"T20 T18 D20",153:"T20 T19 D18",152:"T20 T20 D16",151:"T20 T17 D20",150:"T20 T18 D18",149:"T20 T19 D16",148:"T20 T20 D14",147:"T20 T17 D18",146:"T20 T18 D16",145:"T20 T15 D20",144:"T20 T20 D12",143:"T20 T17 D16",142:"T20 T14 D20",141:"T20 T19 D12",140:"T20 T20 D10",139:"T19 T14 D20",138:"T20 T18 D12",137:"T20 T19 D10",136:"T20 T20 D8",135:"Bull T15 D20",134:"T20 T14 D16",133:"T20 T19 D8",132:"Bull Bull D16",131:"T20 T13 D16",130:"T20 T20 D5",129:"T19 T16 D12",128:"T18 T18 D10",127:"T20 T17 D8",126:"T19 T19 D6",125:"Bull T17 D12",124:"T20 T16 D8",123:"T19 T16 D9",122:"T18 T18 D7",121:"T20 T11 D14",120:"T20 20 D20",119:"T19 T12 D13",118:"T20 18 D20",117:"T20 17 D20",116:"T20 16 D20",115:"T20 15 D20",114:"T20 14 D20",113:"T20 13 D20",112:"T20 12 D20",111:"T20 11 D20",110:"T20 10 D20",109:"T20 9 D20",108:"T20 16 D16",107:"T19 18 D16",106:"T20 10 D18",105:"T20 13 D16",104:"T18 18 D16",103:"T19 10 D18",102:"T20 10 D16",101:"T17 10 D20",100:"T20 D20",99:"T19 10 D16",98:"T20 D19",97:"T19 D20",96:"T20 D18",95:"T19 D19",94:"T18 D20",93:"T19 D18",92:"T20 D16",91:"T17 D20",90:"T18 D18",89:"T19 D16",88:"T16 D20",87:"T17 D18",86:"T18 D16",85:"T15 D20",84:"T20 D12",83:"T17 D16",82:"Bull D16",81:"T19 D12",80:"T20 D10",79:"T19 D11",78:"T18 D12",77:"T19 D10",76:"T20 D8",75:"T17 D12",74:"T14 D16",73:"T19 D8",72:"T16 D12",71:"T13 D16",70:"T18 D8",69:"T19 D6",68:"T20 D4",67:"T17 D8",66:"T10 D18",65:"T19 D4",64:"T16 D8",63:"T13 D12",62:"T10 D16",61:"T15 D8",60:"20 D20",59:"19 D20",58:"18 D20",57:"17 D20",56:"16 D20",55:"15 D20",54:"14 D20",53:"13 D20",52:"12 D20",51:"11 D20",50:"Bull",49:"9 D20",48:"16 D16",47:"15 D16",46:"14 D16",45:"13 D16",44:"12 D16",43:"11 D16",42:"10 D16",41:"9 D16",40:"D20",38:"D19",36:"D18",34:"D17",32:"D16",30:"D15",28:"D14",26:"D13",24:"D12",22:"D11",20:"D10",18:"D9",16:"D8",14:"D7",12:"D6",10:"D5",8:"D4",6:"D3",4:"D2",2:"D1"};
-function setupNames(){const c=+document.getElementById("playerCount").value,n=document.getElementById("names");n.innerHTML="";for(let i=0;i<c;i++)n.innerHTML+=`<input id="p${i}" placeholder="Spieler ${i+1}" style="margin-top:8px">`}
-document.getElementById("playerCount").onchange=setupNames;setupNames();
-function showTab(id){["gameTab","statsTab","historyTab"].forEach(x=>document.getElementById(x).classList.add("hidden"));document.getElementById(id).classList.remove("hidden");["tabGame","tabStats","tabHistory"].forEach(x=>document.getElementById(x).classList.remove("on"));document.getElementById(id==="gameTab"?"tabGame":id==="statsTab"?"tabStats":"tabHistory").classList.add("on");renderStats();renderHistory()}
-function save(){localStorage.setItem("dartV2Active",JSON.stringify({players,current,input,history,start,bestOf,doubleOut,turns,matchStart,active:!document.getElementById("game").classList.contains("hidden")}))}
-function load(){try{const s=JSON.parse(localStorage.getItem("dartV2Active")||"null");if(s&&s.active){players=s.players;current=s.current;input=s.input;history=s.history||[];start=s.start;bestOf=s.bestOf;doubleOut=s.doubleOut;turns=s.turns||[];matchStart=s.matchStart;document.getElementById("setup").classList.add("hidden");document.getElementById("game").classList.remove("hidden");render()}}catch(e){}}
-function startGame(){start=+document.getElementById("startScore").value;bestOf=+document.getElementById("bestOf").value;doubleOut=document.getElementById("doubleOut").value==="1";players=[];for(let i=0;i<+document.getElementById("playerCount").value;i++){players.push({name:document.getElementById("p"+i).value.trim()||"Spieler "+(i+1),score:start,darts:0,points:0,high:0,legs:0,turns:0,one80:0,one40:0,one00:0})}current=0;input="";history=[];turns=[];matchStart=new Date().toISOString();document.getElementById("setup").classList.add("hidden");document.getElementById("game").classList.remove("hidden");render()}
+
+function showCreate(){hideAll();document.getElementById("createBox").classList.remove("hidden")}
+function showJoin(){hideAll();document.getElementById("joinBox").classList.remove("hidden")}
+function backMenu(){hideAll();document.getElementById("menu").classList.remove("hidden")}
+function hideAll(){["menu","createBox","joinBox","game"].forEach(id=>document.getElementById(id).classList.add("hidden"))}
+
+function generateCode(){return Math.random().toString(36).substring(2,7).toUpperCase()}
+
+function makeState(start, bestOf, p1, p2){
+  return {
+    start:start,
+    bestOf:bestOf,
+    current:0,
+    players:[
+      {name:p1,score:start,darts:0,points:0,high:0,legs:0,one80:0,one40:0,one00:0},
+      {name:p2,score:start,darts:0,points:0,high:0,legs:0,one80:0,one40:0,one00:0}
+    ],
+    turns:[],
+    history:[]
+  }
+}
+
+async function createGame(){
+  roomCode = generateCode();
+  const start = parseInt(document.getElementById("startScore").value);
+  const bestOf = parseInt(document.getElementById("bestOf").value);
+  const state = makeState(start,bestOf,document.getElementById("hostName").value||"Spieler 1",document.getElementById("guestName").value||"Spieler 2");
+
+  const { data, error } = await supabase.from("games").insert([{room_code:roomCode,state:state}]).select().single();
+  if(error) return alert("Fehler: Tabelle games fehlt oder RLS blockiert. "+error.message);
+
+  currentGameId = data.id;
+  currentState = data.state;
+  openGame();
+}
+
+async function joinGame(){
+  roomCode = document.getElementById("joinCode").value.trim().toUpperCase();
+  if(!roomCode) return alert("Bitte Code eingeben.");
+
+  const { data, error } = await supabase.from("games").select("*").eq("room_code",roomCode).single();
+  if(error || !data) return alert("Raum nicht gefunden.");
+
+  currentGameId = data.id;
+  currentState = data.state;
+  openGame();
+}
+
+function openGame(){
+  hideAll();
+  document.getElementById("game").classList.remove("hidden");
+  document.getElementById("codeDisplay").innerText = roomCode;
+  render();
+  subscribeRoom();
+}
+
+function subscribeRoom(){
+  if(channel) supabase.removeChannel(channel);
+  channel = supabase.channel("game-"+roomCode)
+    .on("postgres_changes",{event:"UPDATE",schema:"public",table:"games",filter:`room_code=eq.${roomCode}`},payload=>{
+      currentState = payload.new.state;
+      render();
+      setStatus("Live synchronisiert", true);
+    })
+    .subscribe(status=>{
+      if(status==="SUBSCRIBED") setStatus("Online verbunden", true);
+    });
+}
+
+function setStatus(text, ok){
+  document.getElementById("syncStatus").innerHTML = ok ? `<span class="ok">${text}</span>` : `<span class="err">${text}</span>`;
+}
+
 function avg(p){return p.darts?(p.points/p.darts*3).toFixed(1):"0.0"}
-function render(){document.getElementById("players").innerHTML=players.map((p,i)=>{let co=p.score<=170&&checkouts[p.score]?`<div class="checkout">Checkout: ${checkouts[p.score]}</div>`:"";return `<div class="player ${i===current?'active':''}"><div class="playerTop"><div><div class="name">${p.name}${i===current?' · dran':''}</div><div class="score">${p.score}</div></div><div class="badge">${p.legs}/${Math.ceil(bestOf/2)} Legs</div></div><div class="meta"><span>Avg ${avg(p)}</span><span>Darts ${p.darts}</span><span>High ${p.high}</span><span>180er ${p.one80}</span></div>${co}</div>`}).join("");document.getElementById("turnTitle").textContent=players[current].name+" ist dran";document.getElementById("display").textContent=input||"0";document.getElementById("turnList").innerHTML=turns.slice(-8).reverse().map(t=>`<div class="turn"><span>${t.player}</span><b>${t.score}</b><span>Rest ${t.rest}</span></div>`).join("")||"Noch keine Würfe.";renderStats();save()}
+
+function render(){
+  if(!currentState) return;
+  const needed = Math.ceil(currentState.bestOf/2);
+  document.getElementById("players").innerHTML = currentState.players.map((p,i)=>{
+    let co = p.score<=170 && checkouts[p.score] ? `<div class="checkout">Checkout: ${checkouts[p.score]}</div>` : "";
+    return `<div class="player ${i===currentState.current?'active':''}">
+      <div class="playerTop">
+        <div><div class="name">${p.name}${i===currentState.current?' · dran':''}</div><div class="score">${p.score}</div></div>
+        <div class="badge">${p.legs}/${needed} Legs</div>
+      </div>
+      <div class="meta"><span>Avg ${avg(p)}</span><span>Darts ${p.darts}</span><span>High ${p.high}</span><span>180er ${p.one80}</span></div>
+      ${co}
+    </div>`
+  }).join("");
+
+  document.getElementById("turnTitle").innerText = currentState.players[currentState.current].name+" ist dran";
+  document.getElementById("display").innerText = input || "0";
+  document.getElementById("turnList").innerHTML = currentState.turns.slice(-8).reverse().map(t=>`<div class="turn"><span>${t.player}</span><b>${t.score}</b><span>Rest ${t.rest}</span></div>`).join("") || "Noch keine Würfe.";
+}
+
 function num(n){if(input.length>=3)return;input+=n;if(+input>180)input="180";render()}
 function setInput(v){input=String(v);render()}
 function clearInput(){input="";render()}
-function submitScore(){const val=+(input||0);if(val<0||val>180)return alert("Score muss 0–180 sein.");const p=players[current];history.push(JSON.parse(JSON.stringify({players,current,input,turns})));let ns=p.score-val;if(ns<0||(doubleOut&&ns===1)){alert("Bust!");p.darts+=3;turns.push({player:p.name,score:"Bust "+val,rest:p.score})}else if(ns===0){p.score=0;p.darts+=3;p.points+=val;p.high=Math.max(p.high,val);p.turns++;countMilestones(p,val);turns.push({player:p.name,score:val,rest:0});render();setTimeout(()=>winLeg(p),80);return}else{p.score=ns;p.darts+=3;p.points+=val;p.high=Math.max(p.high,val);p.turns++;countMilestones(p,val);turns.push({player:p.name,score:val,rest:p.score})}input="";current=(current+1)%players.length;render()}
+
 function countMilestones(p,v){if(v===180)p.one80++; if(v>=140)p.one40++; if(v>=100)p.one00++}
-function winLeg(p){p.legs++;const needed=Math.ceil(bestOf/2);if(p.legs>=needed){finishMatch(true,p.name);return}alert("🎉 "+p.name+" gewinnt das Leg!");players.forEach(x=>{x.score=start;x.darts=0;x.points=0;x.high=0;x.turns=0});input="";current=players.indexOf(p);render()}
-function undo(){const h=history.pop();if(!h)return;players=h.players;current=h.current;input=h.input;turns=h.turns||[];render()}
-function finishMatch(auto,winnerName){let winner=winnerName||players.slice().sort((a,b)=>b.legs-a.legs)[0]?.name||"Unbekannt";const rec={date:new Date().toLocaleString("de-DE"),winner,start,bestOf,players:players.map(p=>({name:p.name,legs:p.legs,avg:avg(p),high:p.high,darts:p.darts,one80:p.one80})),turns:turns.length};let all=JSON.parse(localStorage.getItem("dartV2History")||"[]");all.unshift(rec);localStorage.setItem("dartV2History",JSON.stringify(all.slice(0,50)));localStorage.removeItem("dartV2Active");if(auto)alert("🏆 Match gewonnen: "+winner);location.reload()}
-function resetAll(){if(confirm("Aktives Spiel wirklich löschen?")){localStorage.removeItem("dartV2Active");location.reload()}}
-function renderStats(){const box=document.getElementById("statsBox");if(!players.length){box.innerHTML="Noch kein aktives Spiel.";return}box.innerHTML=players.map(p=>`<div class="historyItem"><b>${p.name}</b>Avg: ${avg(p)} · High: ${p.high} · Darts: ${p.darts} · 100+: ${p.one00} · 140+: ${p.one40} · 180: ${p.one80}</div>`).join("")}
-function renderHistory(){const box=document.getElementById("historyBox");let all=JSON.parse(localStorage.getItem("dartV2History")||"[]");box.innerHTML=all.length?all.map(m=>`<div class="historyItem"><b>🏆 ${m.winner}</b><div>${m.date} · ${m.start} · Best of ${m.bestOf}</div><div>${m.players.map(p=>`${p.name}: ${p.legs} Legs, Avg ${p.avg}`).join("<br>")}</div></div>`).join(""):"Noch keine gespeicherten Matches."}
-function clearHistory(){if(confirm("Verlauf löschen?")){localStorage.removeItem("dartV2History");renderHistory()}}
-if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(()=>{})}
-load();renderHistory();
+
+async function saveState(){
+  const { error } = await supabase.from("games").update({state:currentState}).eq("room_code",roomCode);
+  if(error) alert("Sync Fehler: "+error.message);
+}
+
+async function submitScore(){
+  const val = parseInt(input||"0");
+  if(isNaN(val)||val<0||val>180) return alert("Score muss 0–180 sein.");
+  const p = currentState.players[currentState.current];
+  currentState.history.push(JSON.parse(JSON.stringify(currentState)));
+  let ns = p.score - val;
+
+  if(ns<0 || ns===1){
+    p.darts += 3;
+    currentState.turns.push({player:p.name,score:"Bust "+val,rest:p.score});
+  } else if(ns===0){
+    p.score=0;p.darts+=3;p.points+=val;p.high=Math.max(p.high,val);countMilestones(p,val);
+    currentState.turns.push({player:p.name,score:val,rest:0});
+    p.legs++;
+    const needed=Math.ceil(currentState.bestOf/2);
+    if(p.legs>=needed){
+      await saveState();
+      alert("🏆 Match gewonnen: "+p.name);
+      input="";
+      render();
+      return;
+    }
+    alert("🎉 Leg gewonnen: "+p.name);
+    currentState.players.forEach(x=>{x.score=currentState.start;x.darts=0;x.points=0;x.high=0});
+  } else {
+    p.score=ns;p.darts+=3;p.points+=val;p.high=Math.max(p.high,val);countMilestones(p,val);
+    currentState.turns.push({player:p.name,score:val,rest:p.score});
+    currentState.current = (currentState.current+1)%currentState.players.length;
+  }
+  input="";
+  render();
+  await saveState();
+}
+
+async function undoTurn(){
+  if(!currentState.history || !currentState.history.length) return;
+  currentState = currentState.history.pop();
+  input="";
+  render();
+  await saveState();
+}
+
+function copyCode(){
+  navigator.clipboard.writeText(roomCode).then(()=>alert("Code kopiert: "+roomCode));
+}
+
+function leaveGame(){
+  if(channel) supabase.removeChannel(channel);
+  roomCode=null;currentGameId=null;currentState=null;input="";
+  backMenu();
+}
 </script>
 </body>
 </html>
