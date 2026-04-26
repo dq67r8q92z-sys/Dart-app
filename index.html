@@ -4,64 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
   <meta name="theme-color" content="#070b10" />
-  <title>Dart Score Pro Multiplayer</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <title>Dart Score Pro V3.2</title>
   <style>
     :root{--bg:#070b10;--card:#111827;--card2:#1f2937;--text:#f9fafb;--muted:#9ca3af;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--blue:#38bdf8;--border:#334155}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{margin:0;background:radial-gradient(circle at top,#172033,#070b10 55%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:18px}
-    h1{font-size:38px;margin:0 0 6px;font-weight:950;letter-spacing:-.05em}
-    h2{font-size:24px;margin:0 0 14px}
-    .sub{color:var(--muted);font-size:16px;font-weight:700;margin-bottom:22px}
-    .card{background:rgba(17,24,39,.96);border:1px solid var(--border);border-radius:24px;padding:18px;margin-bottom:14px;box-shadow:0 12px 36px rgba(0,0,0,.25)}
+    h1{font-size:36px;margin:0 0 6px;font-weight:950;letter-spacing:-.05em}
+    h2{font-size:24px;margin:0 0 14px}.sub{color:var(--muted);font-size:16px;font-weight:700;margin-bottom:22px}
+    .card{background:rgba(17,24,39,.96);border:1px solid var(--border);border-radius:24px;padding:18px;margin-bottom:14px}
     input,button,select{width:100%;border-radius:18px;border:1px solid var(--border);padding:16px;font-size:19px;background:var(--card2);color:var(--text)}
     button{border:0;background:var(--green);color:#04130a;font-weight:950;margin-top:10px}
     .secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
-    .danger{background:var(--red);color:white}
-    .warn{background:var(--yellow);color:#1c1000}
-    .hidden{display:none!important}
+    .danger{background:var(--red);color:white}.warn{background:var(--yellow);color:#1c1000}
+    .hidden{display:none!important}.small{font-size:13px;color:var(--muted);line-height:1.45}.ok{color:#bbf7d0;font-weight:900}.err{color:#fecaca;font-weight:900}
     .code{font-size:34px;letter-spacing:.12em;font-weight:950;text-align:center;padding:16px;border:1px dashed var(--blue);border-radius:18px;background:#020617;color:#bae6fd}
-    .players{display:grid;gap:12px}
-    .player{background:#0f172a;border:1px solid var(--border);border-radius:22px;padding:18px}
-    .active{border-color:var(--green);box-shadow:0 0 0 2px rgba(34,197,94,.18)}
-    .name{font-size:15px;color:var(--muted);font-weight:800}
-    .score{font-size:62px;font-weight:950;line-height:1}
-    .meta{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:10px}
-    .meta span{background:#020617;border:1px solid #1e293b;border-radius:999px;padding:5px 8px}
-    .checkout{margin-top:12px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35);border-radius:14px;padding:10px;color:#bbf7d0;font-weight:850}
+    .players{display:grid;gap:12px}.player{background:#0f172a;border:1px solid var(--border);border-radius:22px;padding:18px}.active{border-color:var(--green);box-shadow:0 0 0 2px rgba(34,197,94,.18)}
+    .name{font-size:15px;color:var(--muted);font-weight:800}.score{font-size:62px;font-weight:950;line-height:1}
+    .meta{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:10px}.meta span{background:#020617;border:1px solid #1e293b;border-radius:999px;padding:5px 8px}
     .display{height:72px;display:flex;align-items:center;justify-content:center;background:#020617;border:1px solid var(--border);border-radius:18px;font-size:40px;font-weight:950;margin-bottom:10px}
-    .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px}
-    .quick button{background:#172033;color:var(--text);padding:12px;font-size:15px;margin:0}
-    .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .pad button{background:var(--card2);color:var(--text);font-size:24px;padding:16px;margin:0}
+    .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px}.quick button{background:#172033;color:var(--text);padding:12px;font-size:15px;margin:0}
+    .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pad button{background:var(--card2);color:var(--text);font-size:24px;padding:16px;margin:0}
     .turn{display:flex;justify-content:space-between;border-bottom:1px solid #1e293b;padding:8px 0;font-size:14px;color:var(--muted)}
-    .small{font-size:13px;color:var(--muted);line-height:1.45}
-    .ok{color:#bbf7d0;font-weight:900}.err{color:#fecaca;font-weight:900}
   </style>
 </head>
 <body>
   <h1>🎯 Dart Score Pro</h1>
-  <div class="sub">V3.1 · Multiplayer Fix</div>
+  <div class="sub">V3.2 · REST-Fix ohne CDN</div>
 
   <section id="menu" class="card">
     <h2>Online Spiel</h2>
-    <select id="startScore">
-      <option>501</option>
-      <option>301</option>
-      <option>701</option>
-    </select>
-    <select id="bestOf" style="margin-top:9px">
-      <option value="1">1 Leg</option>
-      <option value="3">Best of 3</option>
-      <option value="5">Best of 5</option>
-    </select>
+    <select id="startScore"><option>501</option><option>301</option><option>701</option></select>
+    <select id="bestOf" style="margin-top:9px"><option value="1">1 Leg</option><option value="3">Best of 3</option><option value="5">Best of 5</option></select>
     <input id="p1Name" value="Spieler 1" placeholder="Spieler 1" style="margin-top:9px">
     <input id="p2Name" value="Spieler 2" placeholder="Spieler 2" style="margin-top:9px">
     <button onclick="createGame()">Spiel erstellen</button>
     <hr style="border-color:#334155;margin:18px 0">
     <input id="joinCode" placeholder="Raum-Code eingeben">
     <button class="secondary" onclick="joinGame()">Spiel beitreten</button>
-    <div id="menuStatus" class="small" style="margin-top:12px"></div>
+    <div id="menuStatus" class="small" style="margin-top:12px">Bereit.</div>
   </section>
 
   <main id="game" class="hidden">
@@ -88,7 +68,7 @@
         <button class="warn" onclick="clearInput()">C</button><button onclick="num('0')">0</button><button class="danger" onclick="undoTurn()">↶</button>
       </div>
       <button onclick="submitScore()">Score buchen</button>
-      <button class="danger" onclick="leaveGame()">Spiel verlassen</button>
+      <button class="danger" onclick="location.reload()">Spiel verlassen</button>
     </section>
 
     <section class="card">
@@ -100,19 +80,27 @@
 <script>
 const SUPABASE_URL = "https://enhswbayupniwielxxqc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_XHyt9DuEBIp97Z0YwsoauA_ua--ZoDY";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const API = SUPABASE_URL + "/rest/v1/games";
 
-let roomCode=null,currentState=null,input="",channel=null;
+let roomCode=null,currentState=null,input="",pollTimer=null;
 
-const checkouts={170:"T20 T20 Bull",167:"T20 T19 Bull",164:"T20 T18 Bull",161:"T20 T17 Bull",160:"T20 T20 D20",158:"T20 T20 D19",157:"T20 T19 D20",156:"T20 T20 D18",155:"T20 T19 D19",154:"T20 T18 D20",153:"T20 T19 D18",152:"T20 T20 D16",151:"T20 T17 D20",150:"T20 T18 D18",149:"T20 T19 D16",148:"T20 T20 D14",147:"T20 T17 D18",146:"T20 T18 D16",145:"T20 T15 D20",144:"T20 T20 D12",143:"T20 T17 D16",142:"T20 T14 D20",141:"T20 T19 D12",140:"T20 T20 D10",139:"T19 T14 D20",138:"T20 T18 D12",137:"T20 T19 D10",136:"T20 T20 D8",135:"Bull T15 D20",134:"T20 T14 D16",133:"T20 T19 D8",132:"Bull Bull D16",131:"T20 T13 D16",130:"T20 T20 D5",129:"T19 T16 D12",128:"T18 T18 D10",127:"T20 T17 D8",126:"T19 T19 D6",125:"Bull T17 D12",124:"T20 T16 D8",123:"T19 T16 D9",122:"T18 T18 D7",121:"T20 T11 D14",120:"T20 20 D20",119:"T19 T12 D13",118:"T20 18 D20",117:"T20 17 D20",116:"T20 16 D20",115:"T20 15 D20",114:"T20 14 D20",113:"T20 13 D20",112:"T20 12 D20",111:"T20 11 D20",110:"T20 10 D20",109:"T20 9 D20",108:"T20 16 D16",107:"T19 18 D16",106:"T20 10 D18",105:"T20 13 D16",104:"T18 18 D16",103:"T19 10 D18",102:"T20 10 D16",101:"T17 10 D20",100:"T20 D20",99:"T19 10 D16",98:"T20 D19",97:"T19 D20",96:"T20 D18",95:"T19 D19",94:"T18 D20",93:"T19 D18",92:"T20 D16",91:"T17 D20",90:"T18 D18",89:"T19 D16",88:"T16 D20",87:"T17 D18",86:"T18 D16",85:"T15 D20",84:"T20 D12",83:"T17 D16",82:"Bull D16",81:"T19 D12",80:"T20 D10",79:"T19 D11",78:"T18 D12",77:"T19 D10",76:"T20 D8",75:"T17 D12",74:"T14 D16",73:"T19 D8",72:"T16 D12",71:"T13 D16",70:"T18 D8",69:"T19 D6",68:"T20 D4",67:"T17 D8",66:"T10 D18",65:"T19 D4",64:"T16 D8",63:"T13 D12",62:"T10 D16",61:"T15 D8",60:"20 D20",59:"19 D20",58:"18 D20",57:"17 D20",56:"16 D20",55:"15 D20",54:"14 D20",53:"13 D20",52:"12 D20",51:"11 D20",50:"Bull",49:"9 D20",48:"16 D16",47:"15 D16",46:"14 D16",45:"13 D16",44:"12 D16",43:"11 D16",42:"10 D16",41:"9 D16",40:"D20",38:"D19",36:"D18",34:"D17",32:"D16",30:"D15",28:"D14",26:"D13",24:"D12",22:"D11",20:"D10",18:"D9",16:"D8",14:"D7",12:"D6",10:"D5",8:"D4",6:"D3",4:"D2",2:"D1"};
+function headers(extra={}) {
+  return {
+    "apikey": SUPABASE_KEY,
+    "Authorization": "Bearer " + SUPABASE_KEY,
+    "Content-Type": "application/json",
+    ...extra
+  };
+}
 
-function generateCode(){return Math.random().toString(36).substring(2,7).toUpperCase()}
 function setMenuStatus(t,bad=false){document.getElementById("menuStatus").innerHTML=bad?`<span class="err">${t}</span>`:`<span class="ok">${t}</span>`}
+function setStatus(t,ok=true){document.getElementById("syncStatus").innerHTML=ok?`<span class="ok">${t}</span>`:`<span class="err">${t}</span>`}
+function generateCode(){return Math.random().toString(36).substring(2,7).toUpperCase()}
 
 function makeState(){
   const start=parseInt(document.getElementById("startScore").value);
   return {
-    start,
+    start:start,
     bestOf:parseInt(document.getElementById("bestOf").value),
     current:0,
     players:[
@@ -121,76 +109,107 @@ function makeState(){
     ],
     turns:[],
     history:[]
-  }
+  };
 }
 
 async function createGame(){
-  try{
+  try {
     setMenuStatus("Erstelle Raum...");
-    roomCode=generateCode();
-    currentState=makeState();
+    roomCode = generateCode();
+    currentState = makeState();
 
-    const {error}=await supabase
-      .from("games")
-      .insert([{room_code:roomCode,state:currentState}]);
+    const res = await fetch(API, {
+      method:"POST",
+      headers: headers({"Prefer":"return=representation"}),
+      body: JSON.stringify({room_code: roomCode, state: currentState})
+    });
 
-    if(error){setMenuStatus("Fehler: "+error.message,true);return}
+    const text = await res.text();
+    if(!res.ok){
+      setMenuStatus("Fehler: " + text, true);
+      return;
+    }
+
     openGame();
-  }catch(e){
-    setMenuStatus("Fehler: "+e.message,true);
+  } catch(e) {
+    setMenuStatus("Browser/Netzwerk Fehler: " + e.message, true);
   }
 }
 
 async function joinGame(){
-  try{
-    roomCode=document.getElementById("joinCode").value.trim().toUpperCase();
-    if(!roomCode){setMenuStatus("Bitte Code eingeben.",true);return}
+  try {
+    roomCode = document.getElementById("joinCode").value.trim().toUpperCase();
+    if(!roomCode){ setMenuStatus("Bitte Code eingeben.", true); return; }
+
     setMenuStatus("Suche Raum...");
-    const {data,error}=await supabase.from("games").select("*").eq("room_code",roomCode).single();
-    if(error||!data){setMenuStatus("Raum nicht gefunden.",true);return}
-    currentState=data.state;
+    const url = API + "?room_code=eq." + encodeURIComponent(roomCode) + "&select=*";
+    const res = await fetch(url, {headers: headers()});
+    const data = await res.json();
+
+    if(!res.ok || !data.length){
+      setMenuStatus("Raum nicht gefunden.", true);
+      return;
+    }
+
+    currentState = data[0].state;
     openGame();
-  }catch(e){
-    setMenuStatus("Fehler: "+e.message,true);
+  } catch(e) {
+    setMenuStatus("Fehler: " + e.message, true);
   }
 }
 
 function openGame(){
   document.getElementById("menu").classList.add("hidden");
   document.getElementById("game").classList.remove("hidden");
-  document.getElementById("codeDisplay").innerText=roomCode;
+  document.getElementById("codeDisplay").innerText = roomCode;
   render();
-  subscribeRoom();
+  startPolling();
 }
 
-function subscribeRoom(){
-  if(channel) supabase.removeChannel(channel);
-  channel=supabase.channel("game-"+roomCode)
-    .on("postgres_changes",{event:"UPDATE",schema:"public",table:"games",filter:`room_code=eq.${roomCode}`},payload=>{
-      currentState=payload.new.state;
+function startPolling(){
+  if(pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(loadState, 1500);
+  setStatus("Online verbunden");
+}
+
+async function loadState(){
+  try {
+    const url = API + "?room_code=eq." + encodeURIComponent(roomCode) + "&select=state";
+    const res = await fetch(url, {headers: headers()});
+    const data = await res.json();
+    if(res.ok && data.length){
+      currentState = data[0].state;
       render();
-      setStatus("Live synchronisiert",true);
-    })
-    .subscribe(status=>{
-      if(status==="SUBSCRIBED") setStatus("Online verbunden",true);
-    });
+      setStatus("Live aktualisiert");
+    }
+  } catch(e) {
+    setStatus("Sync Fehler: " + e.message, false);
+  }
 }
 
-function setStatus(t,ok){document.getElementById("syncStatus").innerHTML=ok?`<span class="ok">${t}</span>`:`<span class="err">${t}</span>`}
-function avg(p){return p.darts?(p.points/p.darts*3).toFixed(1):"0.0"}
+async function saveState(){
+  const url = API + "?room_code=eq." + encodeURIComponent(roomCode);
+  const res = await fetch(url, {
+    method:"PATCH",
+    headers: headers({"Prefer":"return=minimal"}),
+    body: JSON.stringify({state: currentState})
+  });
+  if(!res.ok){
+    const text = await res.text();
+    alert("Speichern fehlgeschlagen: " + text);
+  }
+}
 
+function avg(p){return p.darts?(p.points/p.darts*3).toFixed(1):"0.0"}
 function render(){
   if(!currentState)return;
   const needed=Math.ceil(currentState.bestOf/2);
-  document.getElementById("players").innerHTML=currentState.players.map((p,i)=>{
-    const co=p.score<=170&&checkouts[p.score]?`<div class="checkout">Checkout: ${checkouts[p.score]}</div>`:"";
-    return `<div class="player ${i===currentState.current?'active':''}">
+  document.getElementById("players").innerHTML=currentState.players.map((p,i)=>`
+    <div class="player ${i===currentState.current?'active':''}">
       <div class="name">${p.name}${i===currentState.current?' · dran':''}</div>
       <div class="score">${p.score}</div>
       <div class="meta"><span>Legs ${p.legs}/${needed}</span><span>Avg ${avg(p)}</span><span>Darts ${p.darts}</span><span>High ${p.high}</span><span>180er ${p.one80}</span></div>
-      ${co}
-    </div>`;
-  }).join("");
+    </div>`).join("");
   document.getElementById("turnTitle").innerText=currentState.players[currentState.current].name+" ist dran";
   document.getElementById("display").innerText=input||"0";
   document.getElementById("turnList").innerHTML=currentState.turns.slice(-8).reverse().map(t=>`<div class="turn"><span>${t.player}</span><b>${t.score}</b><span>Rest ${t.rest}</span></div>`).join("")||"Noch keine Würfe.";
@@ -200,11 +219,6 @@ function num(n){if(input.length>=3)return;input+=n;if(+input>180)input="180";ren
 function setInput(v){input=String(v);render()}
 function clearInput(){input="";render()}
 function countMilestones(p,v){if(v===180)p.one80++; if(v>=140)p.one40++; if(v>=100)p.one00++}
-
-async function saveState(){
-  const {error}=await supabase.from("games").update({state:currentState}).eq("room_code",roomCode);
-  if(error) alert("Sync Fehler: "+error.message);
-}
 
 async function submitScore(){
   const val=parseInt(input||"0");
@@ -216,19 +230,20 @@ async function submitScore(){
   if(ns<0||ns===1){
     p.darts+=3;
     currentState.turns.push({player:p.name,score:"Bust "+val,rest:p.score});
-  }else if(ns===0){
+  } else if(ns===0){
     p.score=0;p.darts+=3;p.points+=val;p.high=Math.max(p.high,val);countMilestones(p,val);
     currentState.turns.push({player:p.name,score:val,rest:0});
     p.legs++;
     const needed=Math.ceil(currentState.bestOf/2);
-    if(p.legs>=needed){await saveState();alert("🏆 Match gewonnen: "+p.name);input="";render();return}
+    if(p.legs>=needed){input="";render();await saveState();alert("🏆 Match gewonnen: "+p.name);return}
     alert("🎉 Leg gewonnen: "+p.name);
     currentState.players.forEach(x=>{x.score=currentState.start;x.darts=0;x.points=0;x.high=0});
-  }else{
+  } else {
     p.score=ns;p.darts+=3;p.points+=val;p.high=Math.max(p.high,val);countMilestones(p,val);
     currentState.turns.push({player:p.name,score:val,rest:p.score});
     currentState.current=(currentState.current+1)%currentState.players.length;
   }
+
   input="";
   render();
   await saveState();
@@ -243,7 +258,6 @@ async function undoTurn(){
 }
 
 function copyCode(){navigator.clipboard.writeText(roomCode).then(()=>alert("Code kopiert: "+roomCode))}
-function leaveGame(){if(channel)supabase.removeChannel(channel);location.reload()}
 </script>
 </body>
 </html>

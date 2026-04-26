@@ -1,7 +1,11 @@
-# Dart Score Pro V3.1 Fix
+# Dart Score Pro V3.2 REST Fix
 
-- Multiplayer über Supabase
-- Spiel erstellen erstellt direkt einen Raum
-- Raum-Code beitreten
-- Live-Sync
-- Cache-Fix für iPhone/Safari
+Diese Version nutzt direkte Supabase REST Requests statt CDN Client.
+Dadurch stabiler auf iPhone/Brave/Safari.
+
+Voraussetzung Supabase Tabelle:
+- id bigint identity primary key
+- created_at timestamptz default now()
+- room_code text not null
+- state jsonb not null
+- RLS disabled
