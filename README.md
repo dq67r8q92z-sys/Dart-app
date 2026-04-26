@@ -1,9 +1,9 @@
-# Dart Score Pro V5
+# Dart Score Pro V6 Pro Style
 
-- Realtime WebSocket + REST fallback
-- 2, 3 oder 4 Spieler
-- besseres UI
-- Room Code teilen
-- letztes Spiel fortsetzen
-- Version Counter
-- 100+, 140+, 180er Tracking
+- Pro Design
+- Live letzter Wurf
+- Checkout-Hilfe
+- Vibration/Sound
+- Animation
+- 2-4 Spieler
+- REST Live Sync

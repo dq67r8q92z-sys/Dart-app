@@ -1,9 +1,9 @@
 {
-  "name": "Dart Score Pro Multiplayer",
+  "name": "Dart Score Pro V6",
   "short_name": "DartScore",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#060912",
-  "theme_color": "#060912",
+  "background_color": "#050816",
+  "theme_color": "#050816",
   "icons": []
 }
