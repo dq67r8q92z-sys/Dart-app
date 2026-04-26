@@ -1,12 +1,9 @@
-# Dart Score Pro V4 Multiplayer Pro
+# Dart Score Pro V5
 
-## Verbesserungen
-- stabilerer Multiplayer über Supabase REST
-- Raum-Code teilen
+- Realtime WebSocket + REST fallback
+- 2, 3 oder 4 Spieler
+- besseres UI
+- Room Code teilen
 - letztes Spiel fortsetzen
-- besserer Polling-Sync
-- Version Counter gegen alte Daten
-- bessere Statusmeldungen
-- neues Leg starten
-- Undo
+- Version Counter
 - 100+, 140+, 180er Tracking
