@@ -1,3 +1,3 @@
-# Dart Score Pro V9
+# Dart Score Pro V10
 
-Dartboard Style UI + Supabase Multiplayer.
+Game Modes: X01, Cricket, Around the Clock, Shanghai, Killer. No-scroll match layout.
