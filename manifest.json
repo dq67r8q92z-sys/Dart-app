@@ -1,9 +1,9 @@
 {
-  "name": "Dart Score Pro V7",
+  "name": "Dart Score Pro V8 Final",
   "short_name": "DartScore",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#050816",
-  "theme_color": "#050816",
+  "background_color": "#05070f",
+  "theme_color": "#05070f",
   "icons": []
 }
