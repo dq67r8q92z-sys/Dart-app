@@ -1,11 +1,12 @@
-# Dart Score Pro V3.2 REST Fix
+# Dart Score Pro V4 Multiplayer Pro
 
-Diese Version nutzt direkte Supabase REST Requests statt CDN Client.
-Dadurch stabiler auf iPhone/Brave/Safari.
-
-Voraussetzung Supabase Tabelle:
-- id bigint identity primary key
-- created_at timestamptz default now()
-- room_code text not null
-- state jsonb not null
-- RLS disabled
+## Verbesserungen
+- stabilerer Multiplayer über Supabase REST
+- Raum-Code teilen
+- letztes Spiel fortsetzen
+- besserer Polling-Sync
+- Version Counter gegen alte Daten
+- bessere Statusmeldungen
+- neues Leg starten
+- Undo
+- 100+, 140+, 180er Tracking
