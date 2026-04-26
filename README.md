@@ -1,17 +1,14 @@
-# Dart Score Pro
+# Dart Score Pro V2
 
-Erste MVP-Version der iPhone-Web-App.
-
-## Funktionen
-- 301 / 501 / 701
-- 1–4 Spieler
-- Bust-Regel
-- Checkout-Hilfe
-- Average
+## Neue Funktionen
+- besseres iPhone-Design
+- Tabs: Spiel / Stats / Verlauf
+- Match-Historie
+- Best of 3 / 5 / 7
+- Double-Out oder Straight-Out
+- 100+, 140+, 180er Zähler
 - Highscore
+- 3-Dart Average
+- Checkout-Hilfe
 - Undo
-- automatische lokale Speicherung
-- als iPhone-Web-App installierbar
-
-## Deployment
-Dieses Repository kann direkt mit Vercel verbunden werden.
+- aktive Spiele werden lokal gespeichert

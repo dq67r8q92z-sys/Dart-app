@@ -3,7 +3,7 @@
   "short_name": "DartScore",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0b1117",
-  "theme_color": "#0b1117",
+  "background_color": "#070b10",
+  "theme_color": "#070b10",
   "icons": []
 }
