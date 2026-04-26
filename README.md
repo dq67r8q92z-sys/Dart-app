@@ -1,11 +1,3 @@
-# Dart Score Pro V8 Final Combined
+# Dart Score Pro V9
 
-Dartsmind-inspirierter Clean Look + vollständige V7 Logik:
-- Multiplayer über Supabase
-- 2-4 Spieler
-- Checkout
-- Match Stats
-- First 9 Average
-- Winner Screens
-- Room Code
-- Clean Score-focused UI
+Dartboard Style UI + Supabase Multiplayer.
