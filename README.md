@@ -1,9 +1,10 @@
-# Dart Score Pro V6 Pro Style
+# Dart Score Pro V7
 
-- Pro Design
-- Live letzter Wurf
-- Checkout-Hilfe
-- Vibration/Sound
-- Animation
+- Checkout + Finish-Warnung
+- Match Stats Pro
+- First 9 Average
+- Checkout Attempts/Hits
+- Winner Screen
+- Leg Winner Screen
 - 2-4 Spieler
-- REST Live Sync
+- Multiplayer Sync über Supabase
