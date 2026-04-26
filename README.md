@@ -1,3 +1,3 @@
-# Dart Score Pro V10
+# Dart Score Pro V11
 
-Game Modes: X01, Cricket, Around the Clock, Shanghai, Killer. No-scroll match layout.
+Bot Gegner: einfach, mittel, stark. Basierend auf V10 Game Modes + No Scroll.
