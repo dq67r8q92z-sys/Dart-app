@@ -1,3 +1,3 @@
-# Dart Score Pro V11
+# Dart Score Pro V12
 
-Bot Gegner: einfach, mittel, stark. Basierend auf V10 Game Modes + No Scroll.
+Dartsmind-style hit display + bot + game modes + no-scroll layout.
