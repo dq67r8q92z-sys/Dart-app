@@ -1,3 +1,3 @@
-# Dart Score Pro V12
+# Dart Score Pro V13
 
-Dartsmind-style hit display + bot + game modes + no-scroll layout.
+Pro Gameplay: bessere Trefferanzeige, Bot wirft einzelne Darts, kompakter No-Scroll-Screen.
